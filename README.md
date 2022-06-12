@@ -14,18 +14,15 @@ Any entry must follow this structure :
 
 ```json
 {
-    params: {
-        chainId: "0x1", 
-        blockExplorerUrls: ["https://ethscan.io"],
-        chainName: "Ethereum",
-        iconUrls: ["https://cryptologos.cc/logos/ethereum-eth-logo.svg"],
-        nativeCurrency: {
-            name: "Ethereum",
-            symbol: "ETH",
-        },
-        rpcUrls: ["https://cloudflare-eth.com"]
-    },
-    usenet: "mainnet"
+    chainId: "0x1", 
+    blockExplorerUrls: ["https://ethscan.io"],
+    chainName: "Ethereum",
+    iconUrls: ["https://cryptologos.cc/logos/ethereum-eth-logo.svg"],
+    currencyName: "Ethereum",
+    symbol: "ETH",
+    rpcUrls: ["https://cloudflare-eth.com"],
+    usenet: "mainnet",
+    chaindoc: "https://officialdoc.net"
 },
 ```
 

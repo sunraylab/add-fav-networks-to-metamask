@@ -9,19 +9,17 @@ export function cardnetwork_template(net) {
         }" style="transform: translateX(-10px) translateY(-50%)">\
             ${net.usenet}</span>\
         <span class="position-absolute top-0 start-0 badge text-bg-light" style="transform: translateX(10px) translateY(10px)">\
-            <span class="text-muted">ChainID</span><br />${net.params.chainId}</span>\
-        <img src="${net.params.iconUrls}" class="mx-auto d-block mt-3" style="height: 4rem;" alt="blockchain-icon">\
+            <span class="text-muted">ChainID</span><br />${net.chainId}</span>\
+        <img src="${net.iconUrls}" class="mx-auto d-block mt-3" style="height: 4rem;" alt="blockchain-icon">\
         <div class="card-body">\
-            <h5 class="card-title">${net.params.chainName}</h5>\
-            <h6 class="card-subtitle mb-2 text-muted text-center">${net.params.nativeCurrency.symbol}</h6>\
+            <h5 class="card-title">${net.chainName}</h5>\
+            <h6 class="card-subtitle mb-2 text-muted text-center">${net.symbol}</h6>\
             <p class="card-text small">\
-                RPC URLs: <br /><code>${net.params.rpcUrls}</code></p>\
+                RPC URLs: <br /><code>${net.rpcUrls}</code></p>\
             <p class="card-text small">\
-                Block Explorer URLs:<br /> <code>${net.params.blockExplorerUrls}</code>\
+                Block Explorer URLs:<br /> <code>${net.blockExplorerUrls}</code>\
             </p>\
-            <button type="button" onclick="clickAddNetwork(\'${
-              net.params.chainId
-            }\')" class="btn btn-primary" disabled>Add\
+            <button type="button" onclick="clickAddNetwork(\'${net.chainId}\')" class="btn btn-primary" disabled>Add\
                 Network</button>\
                 ${
                   net.chaindoc

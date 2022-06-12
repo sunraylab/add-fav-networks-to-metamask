@@ -74,19 +74,14 @@ window.onload = () => {
 
   for (let i = 0; i < myfavnetworks.length; i++) {
     // initialise a default object for HTML templating
-    let net = {
-      params: {
-        chainId: '0x0',
-        blockExplorerUrls: [],
-        chainName: 'EVM blockchain',
-        iconUrls: ['https://raw.githubusercontent.com/thirdweb-dev/chain-icons/main/svg/ethereum.svg'],
-        nativeCurrency: {
-          name: '',
-          symbol: 'TOKEN',
-          decimals: 18
-        },
-        rpcUrls: []
-      },
+    let netdata = {
+      chainId: '0x0',
+      blockExplorerUrls: [],
+      chainName: 'EVM blockchain',
+      iconUrls: ['https://raw.githubusercontent.com/thirdweb-dev/chain-icons/main/svg/ethereum.svg'],
+      currencyName: '',
+      symbol: 'TOKEN',
+      rpcUrls: [],
       usenet: 'usenet',
       chaindoc: ''
     };
@@ -94,32 +89,32 @@ window.onload = () => {
     // check myfavs entries
     let err;
     myfavnetworks[i].usenet
-      ? (net.usenet = myfavnetworks[i].usenet)
+      ? (netdata.usenet = myfavnetworks[i].usenet)
       : (err = 'missing usenet parameter in favorite network definition');
-    myfavnetworks[i].params.chainId
-      ? (net.params.chainId = myfavnetworks[i].params.chainId)
+    myfavnetworks[i].chainId
+      ? (netdata.chainId = myfavnetworks[i].chainId)
       : (err = 'missing chainId parameter in favorite network definition');
-    myfavnetworks[i].params.chainName
-      ? (net.params.chainName = myfavnetworks[i].params.chainName)
+    myfavnetworks[i].chainName
+      ? (netdata.chainName = myfavnetworks[i].chainName)
       : (err = 'missing chainName parameter in favorite network definition');
-    myfavnetworks[i].params.iconUrls ? (net.params.iconUrls = myfavnetworks[i].params.iconUrls) : err;
-    myfavnetworks[i].params.nativeCurrency.symbol
-      ? (net.params.nativeCurrency.symbol = myfavnetworks[i].params.nativeCurrency.symbol)
+    myfavnetworks[i].iconUrls ? (netdata.iconUrls = myfavnetworks[i].iconUrls) : err;
+    myfavnetworks[i].symbol
+      ? (netdata.symbol = myfavnetworks[i].symbol)
       : (err = 'missing nativeCurrency.symbol parameter in favorite network definition');
-    myfavnetworks[i].params.rpcUrls
-      ? (net.params.rpcUrls = myfavnetworks[i].params.rpcUrls)
+    myfavnetworks[i].rpcUrls
+      ? (netdata.rpcUrls = myfavnetworks[i].rpcUrls)
       : (err = 'missing rpcUrls parameter in favorite network definition');
-    myfavnetworks[i].params.blockExplorerUrls
-      ? (net.params.blockExplorerUrls = myfavnetworks[i].params.blockExplorerUrls)
+    myfavnetworks[i].blockExplorerUrls
+      ? (netdata.blockExplorerUrls = myfavnetworks[i].blockExplorerUrls)
       : (err = 'missing blockExplorerUrls parameter in favorite network definition');
-    net.chaindoc = myfavnetworks[i].chaindoc;
+    netdata.chaindoc = myfavnetworks[i].chaindoc;
     if (err) {
       showMessage('alert-danger', err, true);
       return;
     }
 
     // feed the page with all networks
-    document.getElementById('networks').innerHTML += cardnetwork_template(net);
+    document.getElementById('networks').innerHTML += cardnetwork_template(netdata);
   }
 };
 
@@ -134,31 +129,39 @@ window.clickAddNetwork = (chainid) => {
   disableAppFeatures(true);
 
   // lookup chainid in myfavnetworks
-  let params;
+  let favnet;
   for (let i = 0; i < myfavnetworks.length; i++) {
-    if (myfavnetworks[i].params.chainId === chainid) {
-      params = new Array(myfavnetworks[i].params);
+    if (myfavnetworks[i].chainId === chainid) {
+      favnet = myfavnetworks[i];
       break;
     }
   }
 
-  if (!params || params.length === 0) {
-    console.log(params);
-    showMessage('alert-danger', "unable to proceed. missing network data for '" + chainid + '"', true);
+  if (favnet === undefined) {
+    showMessage('alert-danger', "unable to proceed. missing network data for '" + favnet.chainid + '"', true);
     disableAppFeatures(false);
     return;
   }
 
   // fix request params structure
-  if (params[0].nativeCurrency.decimals === undefined) {
-    params[0].nativeCurrency['decimals'] = 18;
-  }
+  let netparams = [{}];
+  netparams[0]['chainId'] = favnet.chainId;
+  netparams[0]['blockExplorerUrls'] = favnet.blockExplorerUrls;
+  netparams[0]['chainName'] = favnet.chainName;
+  netparams[0]['iconUrls'] = favnet.iconUrls;
+  netparams[0]['nativeCurrency'] = {};
+  netparams[0]['nativeCurrency']['name'] = favnet.currencyName;
+  netparams[0]['nativeCurrency']['symbol'] = favnet.symbol;
+  favnet.decimals
+    ? (netparams[0]['nativeCurrency']['decimals'] = favnet.decimals)
+    : (netparams[0]['nativeCurrency']['decimals'] = 18);
+  netparams[0]['rpcUrls'] = favnet.rpcUrls;
 
   // if the chain is not in metamask, then open metamask and ask (1) to add the chain, (2) to switch to the chain
   // if the chain is already in metamask but not selected, then open metamask and ask to switch to the chain
   // if the chain is already selected, then call onSuccessfulAddChain without UI interactions
   // a success trigger the chainChanged event
-  MMProvider.request({ method: 'wallet_addEthereumChain', params })
+  MMProvider.request({ method: 'wallet_addEthereumChain', params: netparams })
     .then(() => {
       showMessage('alert-success', 'network added', true);
       disableAppFeatures(false);
