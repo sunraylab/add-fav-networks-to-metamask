@@ -6,9 +6,11 @@ This program is based on the ethereum API injected in the DOM of any page when t
 
 ## How to use
 
+Running at https://sunraylab.github.io/add-fav-networks-to-metamask/ with some top EVM networks.
+
 Clone this repo then run liveserver. Open http://localhost:5500 on the Brave browser or where metamask extension in installed. Then simply click on add button to the selected network.
 
-If you want to make your own favorite list, then fork this repo and update the list of favorite networks in ``myfav.js``. Then you got your own page.
+To make your own favorite list, then fork this repo and update the list of favorite networks in ``myfav.js``. Then you got your own page. You can publish it as a Github-Pages working at `/root`
 
 Any entry must follow this structure :
 
