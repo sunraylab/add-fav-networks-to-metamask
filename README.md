@@ -1,8 +1,10 @@
-# add-fav-networks-to-metamask-wallet
+# Add favorite EVM networks to Metamask wallet or Brave wallet
 
-Very simple frontend webapp to add favorite EVM compatible networks to metamask or brave wallet
+Very simple frontend webapp to add favorite EVM compatible networks to metamask or brave wallet.
 
 This program is based on the ethereum API injected in the DOM of any page when the metamask extension is installed of brave wallet is enabled.
+
+Installation of metamask extension or brave wallet is checked during page load. A customized message is displayed according to check results.
 
 ## How to use
 
