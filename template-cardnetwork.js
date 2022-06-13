@@ -1,8 +1,11 @@
 // (c) 2022 lolorenzo777 <lolorenzo777@sunraylab.net>
 'use strict';
 
-export function cardnetwork_template(net) {
-  return `<div class="col d-flex justify-content-center g-3">\
+/* template_cardnetwork
+ * use template strings
+ */
+export function template_cardnetwork(net) {
+  return `<div id="network_${net.chainId}" class="col d-flex justify-content-center g-3 cardnetwork">\
     <div class="card text-center mb-3" style="width: 18rem;">\
         <span class="position-absolute top-0 end-0 badge rounded-pill text-bg-${
           net.usenet === 'mainnet' ? `success` : `dark`
@@ -19,8 +22,15 @@ export function cardnetwork_template(net) {
             <p class="card-text small">\
                 Block Explorer URLs:<br /> <code>${net.blockExplorerUrls}</code>\
             </p>\
-            <button type="button" onclick="clickAddNetwork(\'${net.chainId}\')" class="btn btn-primary" disabled>Add\
-                Network</button>\
+            <button type="button" onclick="clickAddNetwork(\'${
+              net.chainId
+            }\')" class="btn btn-primary" disabled>Add Network</button>\
+                ${
+                  net.nbtokens > 0
+                    ? `<button type="button" class="btn btn-secondary ms-2"
+                    onclick="clickTokens(\'${net.chainId}\')">Tokens<i class="bi bi-chevron-right"></i></button>`
+                    : ''
+                }
                 ${
                   net.chaindoc
                     ? `<p class="mt-2 mb-0"><a href="` +
@@ -28,7 +38,8 @@ export function cardnetwork_template(net) {
                       `">Chain Doc <i class="bi bi-box-arrow-up-right"></i></a></p>`
                     : ``
                 }
-        </div>\
+
+                </div>\
     </div>\
   </div>\
 `;

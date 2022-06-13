@@ -3,9 +3,11 @@
 
 import { METAMASK_STATUS, MMProvider, QueryMetamaskStatus } from './querymetamaskstatus.js';
 import { myfavnetworks } from './myfav.js';
-import { cardnetwork_template } from './cardnetwork-template.js';
+import { template_cardnetwork } from './template-cardnetwork.js';
+import { template_cardtoken } from './template-cardtoken.js';
 
-/* disableAppFeatures
+/***********************************************************
+ * disableAppFeatures
  * enable/disable app features and clear messagebox
  */
 function disableAppFeatures(fDisable) {
@@ -20,7 +22,8 @@ function disableAppFeatures(fDisable) {
   }
 }
 
-/* onload
+/***********************************************************
+ * onload
  * check metamask status and build the favorite network sections
  */
 window.onload = () => {
@@ -83,7 +86,8 @@ window.onload = () => {
       symbol: 'TOKEN',
       rpcUrls: [],
       usenet: 'usenet',
-      chaindoc: ''
+      chaindoc: '',
+      nbtokens: 0
     };
 
     // check myfavs entries
@@ -108,17 +112,21 @@ window.onload = () => {
       ? (netdata.blockExplorerUrls = myfavnetworks[i].blockExplorerUrls)
       : (err = 'missing blockExplorerUrls parameter in favorite network definition');
     netdata.chaindoc = myfavnetworks[i].chaindoc;
+    if (myfavnetworks[i].tokens) netdata.nbtokens = myfavnetworks[i].tokens.length;
     if (err) {
       showMessage('alert-danger', err, true);
       return;
     }
 
     // feed the page with all networks
-    document.getElementById('networks').innerHTML += cardnetwork_template(netdata);
+    // this will remove the template
+    document.getElementById('networks').innerHTML += template_cardnetwork(netdata);
   }
+  CloseSectionTokens();
 };
 
-/* clickAddNetwork
+/***********************************************************
+ * clickAddNetwork
  * lookfor selected network data and call wallet_addEthereumChain API
  */
 window.clickAddNetwork = (chainid) => {
@@ -138,7 +146,7 @@ window.clickAddNetwork = (chainid) => {
   }
 
   if (favnet === undefined) {
-    showMessage('alert-danger', "unable to proceed. missing network data for '" + favnet.chainid + '"', true);
+    showMessage('alert-danger', "unable to proceed. missing network data for '" + favnet.chainId + '"', true);
     disableAppFeatures(false);
     return;
   }
@@ -159,11 +167,10 @@ window.clickAddNetwork = (chainid) => {
 
   // if the chain is not in metamask, then open metamask and ask (1) to add the chain, (2) to switch to the chain
   // if the chain is already in metamask but not selected, then open metamask and ask to switch to the chain
-  // if the chain is already selected, then call onSuccessfulAddChain without UI interactions
-  // a success trigger the chainChanged event
+  // if the chain is already selected, then success ending without UI interactions
   MMProvider.request({ method: 'wallet_addEthereumChain', params: netparams })
     .then(() => {
-      showMessage('alert-success', 'network added', true);
+      showMessage('alert-success', 'Success<br/>The network is setup in your metamask extension.', true);
       disableAppFeatures(false);
     })
     .catch((err) => {
@@ -172,11 +179,164 @@ window.clickAddNetwork = (chainid) => {
     });
 };
 
-/**************************************
- * UI
+/***********************************************************
+ * clickTokens
+ * collapse non selected networks then open the token section
+ * and feed the token section
  */
+window.clickTokens = (chainid) => {
+  if (!MMProvider) {
+    console.log('missing MMProvider');
+    return;
+  }
 
-// helper to display the message box
+  // lookup chainid in myfavnetworks
+  let favnet;
+  for (let i = 0; i < myfavnetworks.length; i++) {
+    if (myfavnetworks[i].chainId === chainid) {
+      favnet = myfavnetworks[i];
+      break;
+    }
+  }
+  if (favnet === undefined || typeof favnet.tokens === 'undefined' || favnet.tokens.length === 0) {
+    showMessage('alert-danger', "unable to proceed. missing network data for '" + favnet.chainId + '"', true);
+    disableAppFeatures(false);
+    return;
+  }
+
+  // hide all network cards unless the selected one
+  document.querySelectorAll('#networks .cardnetwork').forEach(function (card) {
+    if (card.id && card.id.substring(8) !== chainid) {
+      card.classList.remove('d-flex');
+      card.classList.add('d-none');
+    }
+  });
+
+  // show the section tokens
+  // remove any hidden HTML templates
+  document.getElementById('section_tokens').innerHTML = `
+    <h4>
+      <button id="btnCloseSectionTokens" onclick="clickCloseTokens()" class="btn btn-info position-absolute top-0 start-50 translate-middle"><i class="bi bi-chevron-left"></i>
+        Tokens
+      </button>
+    </h4>
+  `;
+  document.getElementById('section_tokens').classList.add('show');
+
+  // loop overs tokens and display
+  for (let i = 0; i < favnet.tokens.length; i++) {
+    document.getElementById('section_tokens').innerHTML += template_cardtoken(favnet, favnet.tokens[i]);
+  }
+};
+
+/***********************************************************
+ *  clickWatchInMetamask
+ *
+ */
+window.clickWatchInMetamask = (chainid, tokensymbol) => {
+  const btn = document.getElementById('btnCloseSectionTokens');
+  btn.focus();
+
+  if (!MMProvider) {
+    console.log('missing MMProvider');
+    return;
+  }
+  disableAppFeatures(true);
+
+  // console.log(chainid, tokensymbol);
+
+  // lookup chainid and tokensymbol in myfavnetworks
+  let favnet;
+  for (let i = 0; i < myfavnetworks.length; i++) {
+    if (myfavnetworks[i].chainId === chainid) {
+      favnet = myfavnetworks[i];
+      break;
+    }
+  }
+  if (favnet === undefined || typeof favnet.tokens === 'undefined' || favnet.tokens.length === 0) {
+    showMessage('alert-danger', "unable to proceed. missing network data for '" + favnet.chainId + '"', true);
+    disableAppFeatures(false);
+    return;
+  }
+  let token;
+  for (let i = 0; i < favnet.tokens.length; i++) {
+    if (favnet.tokens[i].symbol === tokensymbol) {
+      token = favnet.tokens[i];
+      break;
+    }
+  }
+  if (token === undefined) {
+    showMessage('alert-danger', "unable to proceed. missing token data for '" + tokensymbol + '"', true);
+    disableAppFeatures(false);
+    return;
+  }
+
+  // call metamask API, swithing to the right network first
+  MMProvider.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: chainid }]
+  })
+    .then(() => {
+      console.log(`chainid ${chainid} is selected`);
+      // ok, the chain is selected
+      // try to add the token
+      const params = {
+        type: token.type,
+        options: {
+          address: token.address,
+          symbol: token.symbol,
+          decimals: 18,
+          image: token.iconUrl
+        }
+      };
+
+      setTimeout(() => {
+        MMProvider.request({ method: 'wallet_watchAsset', params })
+          // the token request has been successful (but we don't know if process is terminated in metamask)
+          .then((data) => {
+            console.log(data);
+            disableAppFeatures(false);
+          })
+          // not possible to add the token
+          .catch((err) => {
+            console.error(err);
+            showMessage('alert-danger', err.message, true);
+            disableAppFeatures(false);
+          });
+      }, 2000);
+    })
+    // the chain is not selected, not possible to add the token
+    .catch((err) => {
+      console.error(err);
+      showMessage('alert-danger', err.message, true);
+      disableAppFeatures(false);
+    });
+};
+
+/***********************************************************
+ * clickCloseTokens() & CloseSectionTokens()
+ * collapse the token section and show all network cards
+ */
+window.clickCloseTokens = () => {
+  CloseSectionTokens();
+};
+
+function CloseSectionTokens() {
+  // collapse the section
+  document.getElementById('section_tokens').innerHTML = ``;
+  document.getElementById('section_tokens').classList.remove('show');
+  // show all networks
+  document.querySelectorAll('#networks .cardnetwork').forEach(function (card) {
+    card.classList.remove('d-none');
+    card.classList.add('d-flex');
+  });
+  //console.log('close token section terminated');
+}
+
+/***********************************************************
+ * showMessage
+ * helper to display the message box
+ */
 function showMessage(alerttype, msg, fclose) {
   const box = document.getElementById('msgbox');
   box.classList.remove('alert-primary', 'alert-success', 'alert-danger', 'alert-warning');
@@ -188,4 +348,5 @@ function showMessage(alerttype, msg, fclose) {
   }
   // feed the message itself
   box.innerHTML = msg;
+  box.focus();
 }

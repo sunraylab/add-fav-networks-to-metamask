@@ -31,30 +31,158 @@
         <div class="container">
             <div id="networks" class="row">
 
+                <!-- dev template -->
                 <div class="col d-flex justify-content-center g-3">
-                    <div class="card text-center mb-3" style="width: 18rem;">
-                        <span class="position-absolute top-0 end-0 badge rounded-pill text-bg-success"
-                            style="transform: translateX(-10px) translateY(-50%)">
-                            mainnet</span>
-                        <span class="position-absolute top-0 start-0 badge text-bg-light"
-                            style="transform: translateX(10px) translateY(10px)">
-                            <span class="text-muted">ChainID</span><br /> 0x00</span>
-                        <img src="/blockchain.png" class="mx-auto d-block mt-3" style="height: 4rem;" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">EVM blockchain</h5>
-                            <h6 class="card-subtitle mb-2 text-muted text-center">TOKEN - <small>EVM Token</small>
-                            </h6>
-                            <p class="card-text small">
-                                RPC URLs: <br /><code>https://rpc.evm.net</code></p>
-                            <p class="card-text small">
-                                Block Explorer URLs:<br /> <code>https://ethscan.io</code>
-                            </p>
-                            <button type="button" onclick="clickAddNetwork()" class="btn btn-primary" disabled>Add
-                                Network</button>
-                            <p class="mt-2 mb-0"><a href="#">Chain Doc <i class="bi bi-box-arrow-up-right"></i></a></p>
+                    <div class="card text-center mb-3">
+                        <div class="row g-0">
+                            <div class="col">
+                                <div style="width: 18rem;">
+                                    <span class="position-absolute top-0 end-0 badge rounded-pill text-bg-success"
+                                        style="transform: translateX(-10px) translateY(-50%)">
+                                        mainnet</span>
+                                    <span class="position-absolute top-0 start-0 badge text-bg-light"
+                                        style="transform: translateX(10px) translateY(10px)">
+                                        <span class="text-muted">ChainID</span><br /> 0x00</span>
+                                    <img src="/blockchain.png" class="mx-auto d-block mt-3" style="height: 4rem;"
+                                        alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">EVM blockchain</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted text-center">TOKEN - <small>EVM
+                                                Token</small>
+                                        </h6>
+                                        <p class="card-text small">
+                                            RPC URLs: <br /><code>https://rpc.evm.net</code></p>
+                                        <p class="card-text small">
+                                            Block Explorer URLs:<br /> <code>https://ethscan.io</code>
+                                        </p>
+                                        <button type="button" onclick="clickAddNetwork()" class="btn btn-primary"
+                                            disabled>Add
+                                            Network</button>
+
+                                        <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="collapse"
+                                            data-bs-target="#section_tokens" aria-expanded="false"
+                                            aria-controls="section_tokens">Tokens <i
+                                                class="bi bi-chevron-right"></i></button>
+
+                                        <p class="mt-2 mb-0"><a href="#">Chain Doc <i
+                                                    class="bi bi-box-arrow-up-right"></i></a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="token0x1" class="col collapse">
+                                <div class="border-start h-100">
+                                    <div class="card-body">
+                                        <p>tototo </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- end of dev template -->
+
+            </div>
+        </div>
+    </section>
+
+    <!-- tokens -->
+    <section class="album position-relative">
+        <div class="container">
+            <div id="section_tokens" class="row py-5 collapse">
+
+                <!-- dev template -->
+                <h4><span class="position-absolute top-0 start-50 translate-middle badge bg-info">
+                        Tokens<br /><i class="bi bi-arrow-bar-down"></i>
+                    </span>
+                </h4>
+
+                <div class="col d-flex justify-content-center p-0 m-2">
+                    <div class="card">
+                        <div class="row p-0 m-0">
+                            <div class="col-1 py-0 px-2 mx-0 my-2 d-block" style="width: 5rem;">
+                                <div class="row p-0 mx-0 my-2">
+                                    <img src="/blockchain.png" class="m-auto w-auto p-0 d-block" style="height: 3rem;"
+                                        alt="tokenlogo">
+                                </div>
+                                <div class="row p-0 mx-0 my-2"><span
+                                        class="badge rounded-pill text-bg-dark text-center mx-auto">
+                                        <small>ERC20</small></span>
+                                </div>
+                            </div>
+                            <div class="col w-auto px-0 mx-0">
+                                <div class="card-body ps-2">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <h4 class="card-title">BAT</h4>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-outline-primary btn-sm">Watch in Metamask</button>
+                                        </div>
+                                    </div>
+                                    <div class="row w-auto">
+                                        <p class="card-text w-auto"><small>Smart contract address</small><br />
+                                            <a href="#">0x0d8775f648430679a709e98d2b0cb6250d2887ef</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col d-flex justify-content-center p-0 m-2">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-1 ms-2 d-block" style="width: 4rem;">
+                                <img src="/blockchain.png" class="mx-auto d-block mt-3" style="height: 4rem;"
+                                    alt="tokenlogo">
+                            </div>
+                            <div class="col">
+                                <div class="card-body ps-2">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <h4 class="card-title">BAT</h4>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-outline-primary btn-sm">Watch in Metamask</button>
+                                        </div>
+                                    </div>
+                                    <p class="card-text"><small>Smart contract address</small><br />
+                                        <a href="#">0x0d8775f648430679a709e98d2b0cb6250d2887ef</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col d-flex justify-content-center p-0 m-2">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-1 ms-2 d-block" style=" width: 4rem;">
+                                <img src="/blockchain.png" class="mx-auto d-block mt-3" style="height: 4rem;"
+                                    alt="tokenlogo">
+                            </div>
+                            <div class="col">
+                                <div class="card-body ps-2">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <h4 class="card-title">BAT</h4>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-outline-primary btn-sm">Watch in Metamask</button>
+                                        </div>
+                                    </div>
+                                    <p class="card-text"><small>Smart contract address</small><br />
+                                        <a href="#">0x0d8775f648430679a709e98d2b0cb6250d2887ef</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end of dev template -->
 
             </div>
         </div>

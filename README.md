@@ -26,7 +26,15 @@ Any entry must follow this structure :
     symbol: "ETH",
     rpcUrls: ["https://cloudflare-eth.com"],
     usenet: "mainnet",
-    chaindoc: "https://officialdoc.net"
+    chaindoc: "https://officialdoc.net", // optional
+    tokens: [ // optional
+      {
+        symbol: "BAT",
+        type: "ERC20",
+        address: "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+        iconUrl: "https://cryptologos.cc/logos/basic-attention-token-bat-logo.svg"
+      }
+    ]
 },
 ```
 
