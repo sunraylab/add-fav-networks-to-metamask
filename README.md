@@ -16,7 +16,7 @@ To make your own favorite list, then fork this repo and update the list of favor
 
 Any entry must follow this structure :
 
-```json
+```javascript
 {
     chainId: "0x1", 
     blockExplorerUrls: ["https://ethscan.io"],
